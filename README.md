@@ -13,27 +13,25 @@ npm install daemon.js
 
 ## Usage
 ```js
-import Daemon from "daemon.js";
+import { NodeDaemon } from "daemon.js";
 import { resolve } from "path";
 
-const daemon = new Daemon({
-	name: 'MyDaemon',
+const daemon = new NodeDaemon('MyDaemon', {
 	displayName: 'My Daemon',
-	script: resolve('index.js')
+	targetPath: resolve('index.js')
 });
 
 await daemon.install();
 ```
-**Example with DaemonRegistry:**
+**Example with Script argument:**
 ```js
-import { DaemonRegistry } from "daemon.js";
+import { NodeDaemon } from "daemon.js";
 import { resolve } from "path";
 
-const daemon = DaemonRegistry.register('MyDaemon', {
-	displayName: 'My Daemon',
-	script: resolve('index.js')
-});
+const daemon = new NodeDaemon(resolve('MyDaemon.js'));
+
+await daemon.install();
 ```
 
 ## License
-GNU General Public License v2.0. See [LICENCE](https://github.com/zenginlimited/server/LICENSE) for details.
+GNU General Public License v2.0. See [LICENCE](https://github.com/Calculamatrise/daemon.js/LICENSE) for details.
