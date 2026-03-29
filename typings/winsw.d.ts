@@ -1,5 +1,8 @@
-export declare class WinSW implements WinSWConfig {
+export declare class WinSW {
+	config: WinSWConfig
+
 	createBinary(): Promise<void>
+	updateConfig(): Promise<void>
 	unlinkBinary(): Promise<void>
 	toXML(): string
 
