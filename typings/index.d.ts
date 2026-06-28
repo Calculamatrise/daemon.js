@@ -26,8 +26,8 @@ declare class Daemon extends DaemonInfo {
 	kill(): Promise<void>
 	refresh(): Promise<void>
 	restart(): Promise<void>
-	start(): Promise<boolean>
-	stop(): Promise<boolean>
+	start(): Promise<void>
+	stop(): Promise<void>
 	uninstall(force: boolean): Promise<void>
 }
 
@@ -43,7 +43,7 @@ declare class NodeDaemon extends Daemon {
 }
 
 declare class DaemonManager {
-	kill(name: string): Promise<boolean>
+	kill(name: string): Promise<void>
 	restart(name: string): Promise<void>
 	start(name: string): Promise<void>
 	stop(name: string): Promise<void>
