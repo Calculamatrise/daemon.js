@@ -18,7 +18,7 @@ import { resolve } from "path";
 
 const daemon = new NodeDaemon('MyDaemon', {
 	displayName: 'My Daemon',
-	targetPath: resolve('index.js')
+	entry: resolve('index.js')
 });
 
 await daemon.install();

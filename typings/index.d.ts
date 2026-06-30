@@ -13,57 +13,63 @@ declare class DaemonInfo {
 	readonly binaryExists: boolean
 	readonly exitCode: number
 	readonly isRunning: boolean
+
+	static from(raw: string): DaemonInfo
 }
 
 declare class Daemon extends DaemonInfo {
-	constructor(name: string, options?: DaemonConfig)
-	constructor(options: DaemonConfig)
-	constructor(path: string, options?: DaemonConfig)
+	constructor(id: string, options?: DaemonOptions)
+	constructor(options: DaemonOptions)
+	constructor(path: string, options?: DaemonOptions)
 
-	// readonly options: DaemonConfig
+	// readonly options: DaemonOptions
 
-	install(): Promise<void>
+	fetch(): Promise<Daemon | null>
+	install(password?: string): Promise<void>
 	kill(): Promise<void>
-	refresh(): Promise<void>
-	restart(): Promise<void>
-	start(): Promise<void>
-	stop(): Promise<void>
+	restart(wait?: boolean | true): Promise<void>
+	start(wait?: boolean | true): Promise<void>
+	stop(wait?: boolean | true): Promise<void>
 	uninstall(force: boolean): Promise<void>
+	uninstall(info?: DaemonInfo): Promise<void>
 }
 
 declare class NodeDaemon extends Daemon {
-	// constructor(options: DaemonConfig)
+	constructor(id: string, options?: NodeDaemonOptions)
+	constructor(options: NodeDaemonOptions)
+	constructor(path: string, options?: NodeDaemonOptions)
 
-	readonly options: DaemonConfig
+	readonly options: NodeDaemonOptions
 
-	createBinary(): Promise<void>
-	unlinkBinary(): Promise<void>
-
-	// toXML(): string
+	static test(id, options: NodeDaemonOptions): boolean
 }
 
 declare class DaemonManager {
-	kill(name: string): Promise<void>
-	restart(name: string): Promise<void>
-	start(name: string): Promise<void>
-	stop(name: string): Promise<void>
-
-	create(name: string, config: DaemonConfig): Promise<Daemon>
-	delete(name: string, force: boolean): Promise<void>
-	static entries(): AsyncIterableIterator<Daemon, void, Daemon>
-	static get(name: string): Promise<Daemon>
-	static has(name: string): Promise<boolean>
-	isRegistered(name: string): Promise<boolean>
-	register(name: string, config: DaemonConfig): Promise<Daemon>
-	// unlink(name: string): Promise<boolean>
-	unregister(name: string, force: boolean): Promise<boolean>
+	static [Symbol.asyncIterator]: AsyncIterableIterator<Daemon>
+	static entries(): AsyncIterableIterator<Daemon>
+	static get(id: string): Promise<Daemon | null>
+	static has(id: string): Promise<boolean>
+	static install(id: string, options?: DaemonOptions | NodeDaemonOptions): Promise<Daemon>
+	static install(options: DaemonOptions | NodeDaemonOptions): Promise<Daemon>
+	static install(path: string, options?: DaemonOptions | NodeDaemonOptions): Promise<Daemon>
+	static kill(id: string): Promise<void>
+	static list(): Array<Daemon>
+	static restart(id: string): Promise<void>
+	static start(id: string): Promise<void>
+	static stop(id: string): Promise<void>
+	static uninstall(id: string): Promise<void>
+	static update(id: string, info?: DaemonInfo): Promise<void>
 }
 
 declare class DaemonRegistry {
-	static get(name: string, state?: boolean | false): Promise<Object>
-	static getAll(): Promise<Array<Object>>
-	static entries(): AsyncIterableIterator<DaemonInfo, void, DaemonInfo>
-	static isRegistered(name: string): Promise<boolean>
+	static [Symbol.asyncIterator]: AsyncIterableIterator<DaemonInfo>
+	static config(id: string, info: DaemonInfo): Promise<void>
+	static entries(): AsyncIterableIterator<DaemonInfo>
+	static get(id: string, state?: boolean | true): Promise<DaemonInfo | null>
+	static isRegistered(id: string): Promise<boolean>
+	static register(id: string, binary: string, info?: DaemonInfo): Promise<void>
+	static unregister(id: string, skipCheck?: boolean | false): Promise<boolean | null>
+	static unregister(id: string, options: UnregisterOptions): Promise<boolean | null>
 }
 
 //#region Interfaces
@@ -74,13 +80,26 @@ declare interface LogOnAsConfig {
 	password?: string
 }
 
-declare interface DaemonConfig {
-	execFlags?: string
+declare interface DaemonOptions {
+	binaryPath: string
+	displayName?: string
+	id: string
 	logOnAs?: LogOnAsConfig
-	script: string
+	startType?: StartType
+}
+
+declare interface NodeDaemonOptions extends DaemonOptions {
+	entry: string
+	args: string[]
+	execArgv?: string[]
+	// maxAttempts?: number | 3
+	runtimeExecutable?: string
 	winsw?: WinSWOptions
-	wrap?: boolean
-	wrapper?: WrapperOptions
+}
+
+declare interface UnregisterOptions {
+	skipCheck?: boolean
+	purge?: boolean
 }
 
 declare interface WinSWOptions {
@@ -96,19 +115,9 @@ declare interface WinSWOptions {
 	logPath?: string
 	maxRestarts: number
 	maxRetries?: number
-	nodeOptions: string
 	stopParentFirst?: boolean
 	stopTimeout: number
 	workingDirectory?: string
-}
-
-declare interface WrapperOptions {
-	abortOnError: boolean | true
-	commandArguments: {
-		grow: number | 0.5
-		wait: number | 1
-	}
-	maxRestarts: number | 3
 }
 
 //#region Enumerations
@@ -144,6 +153,6 @@ declare enum State {
 //#region Exports
 export { Daemon, DaemonManager, DaemonRegistry, NodeDaemon }
 export default Daemon;
-export type { DaemonConfig, LogOnAsConfig, WinSWOptions, WrapperOptions }
+export type { DaemonOptions, LogOnAsConfig, WinSWOptions, UnregisterOptions }
 export { AccountType, StartFlag, StartType, State }
 export * from './winsw'
