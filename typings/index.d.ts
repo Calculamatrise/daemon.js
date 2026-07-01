@@ -54,9 +54,9 @@ declare class DaemonManager {
 	static install(path: string, options?: DaemonOptions | NodeDaemonOptions): Promise<Daemon>
 	static kill(id: string): Promise<void>
 	static list(): Array<Daemon>
-	static restart(id: string): Promise<void>
-	static start(id: string): Promise<void>
-	static stop(id: string): Promise<void>
+	static restart(id: string, wait?: boolean): Promise<void>
+	static start(id: string, wait?: boolean): Promise<void>
+	static stop(id: string, wait?: boolean): Promise<void>
 	static uninstall(id: string): Promise<void>
 	static update(id: string, info?: DaemonInfo): Promise<void>
 }
