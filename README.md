@@ -13,8 +13,8 @@ npm install daemon.js
 
 ## Usage
 ```js
-import { NodeDaemon } from "daemon.js";
 import { resolve } from "path";
+import { NodeDaemon } from "daemon.js";
 
 const daemon = new NodeDaemon('MyDaemon', {
 	displayName: 'My Daemon',
@@ -25,8 +25,8 @@ await daemon.install();
 ```
 **Example with Script argument:**
 ```js
-import { NodeDaemon } from "daemon.js";
 import { resolve } from "path";
+import { NodeDaemon } from "daemon.js";
 
 const daemon = new NodeDaemon(resolve('MyDaemon.js'));
 
@@ -34,4 +34,4 @@ await daemon.install();
 ```
 
 ## License
-GNU General Public License v2.0. See [LICENCE](https://github.com/Calculamatrise/daemon.js/LICENSE) for details.
+GNU General Public License v3.0. See [LICENCE](https://github.com/Calculamatrise/daemon.js/LICENSE) for details.

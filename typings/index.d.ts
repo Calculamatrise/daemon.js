@@ -64,7 +64,8 @@ declare class DaemonManager {
 declare class DaemonRegistry {
 	static [Symbol.asyncIterator]: AsyncIterableIterator<DaemonInfo>
 	static config(id: string, info: DaemonInfo): Promise<void>
-	static entries(): AsyncIterableIterator<DaemonInfo>
+	static entries(options?: WindowsEnumerationOptions): AsyncIterableIterator<DaemonInfo>
+	static entries(group?: string): AsyncIterableIterator<DaemonInfo>
 	static get(id: string, state?: boolean | true): Promise<DaemonInfo | null>
 	static isRegistered(id: string): Promise<boolean>
 	static register(id: string, binary: string, info?: DaemonInfo): Promise<void>
@@ -90,7 +91,7 @@ declare interface DaemonOptions {
 
 declare interface NodeDaemonOptions extends DaemonOptions {
 	entry: string
-	args: string[]
+	args?: string[]
 	execArgv?: string[]
 	// maxAttempts?: number | 3
 	runtimeExecutable?: string
@@ -118,6 +119,15 @@ declare interface WinSWOptions {
 	stopParentFirst?: boolean
 	stopTimeout: number
 	workingDirectory?: string
+}
+
+declare interface WindowsEnumerationOptions {
+	bufferSize?: number
+	extended?: boolean | true
+	group?: string
+	resumeIndex?: number
+	state?: State
+	type?: number
 }
 
 //#region Enumerations
