@@ -1,7 +1,7 @@
 {
 	"author": "Calculamatrise",
 	"name": "daemon.js",
-	"version": "0.1.4",
+	"version": "0.1.5",
 	"description": "A small yet powerful library to create and manage services on Windows.",
 	"keywords": ["bun", "daemon", "node", "node-daemon", "nodejs", "service", "services", "windows"],
 	"bugs": { "url": "https://github.com/Calculamatrise/daemon.js/issues" },

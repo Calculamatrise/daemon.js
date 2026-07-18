@@ -1,20 +1,17 @@
 //#region Classes
 declare class DaemonInfo {
 	binaryPath: string
-	dependencies: Set<string>
 	displayName: string
 	id: string
 	logOnAs: LogOnAsConfig
 	pid: number
-	serviceExitCode: number
 	startType: StartType
 	state: State
 
 	readonly binaryExists: boolean
+	readonly dependencies: Set<string>
 	readonly exitCode: number
 	readonly isRunning: boolean
-
-	static from(raw: string): DaemonInfo
 }
 
 declare class Daemon extends DaemonInfo {
@@ -137,16 +134,10 @@ declare enum AccountType {
 	NetworkService = 'NetworkService'
 }
 
-declare enum StartFlag {
-	AutoStart = 2,
-	DemandStart = 3,
-	Disabled = 4
-}
-
 declare enum StartType {
-	AutoStart = 'auto',
-	DelayedAutoStart = 'delayed-auto',
-	DemandStart = 'demand',
+	Auto = 'auto',
+	DelayedAuto = 'delayed-auto',
+	Manual = 'demand',
 	Disabled = 'disabled'
 }
 
@@ -164,5 +155,5 @@ declare enum State {
 export { Daemon, DaemonManager, DaemonRegistry, NodeDaemon }
 export default Daemon;
 export type { DaemonOptions, LogOnAsConfig, WinSWOptions, UnregisterOptions }
-export { AccountType, StartFlag, StartType, State }
+export { AccountType, StartType, State }
 export * from './winsw'
